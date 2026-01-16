@@ -111,24 +111,19 @@ Each event is chained via a hash pointer:
 
 ```mermaid
 flowchart LR
-Event1["Event1: event_hash"] --> Event2["Event2: event_hash"]
-Event2 --> Event3["Event3: event_hash"]
-Event3 --> EventN["EventN: event_hash"]
+Event1["Event1: event_hash"] --> Event2["Event2: event_hash"] --> EventN["EventN: event_hash"]
 
 subgraph chainSegment [ChainSegmentWindow]
 Event1
 Event2
-Event3
 EventN
 end
 
 Event1 -.->|"prev_event_hash"| Event2
-Event2 -.->|"prev_event_hash"| Event3
-Event3 -.->|"prev_event_hash"| EventN
+Event2 -.->|"prev_event_hash"| EventN
 
 ChainRoot["MerkleRoot_of_Segment"] --- Event1
 ChainRoot --- Event2
-ChainRoot --- Event3
 ChainRoot --- EventN
 
 ChainRoot -->|"Anchor_commitment"| ExternalNotary["ExternalNotary"]
