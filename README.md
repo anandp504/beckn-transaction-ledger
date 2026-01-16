@@ -109,6 +109,31 @@ Each event is chained via a hash pointer:
 - Build periodic Merkle roots over contiguous segments of the same chain (e.g., all events in a partition window or chain shard).
 - Anchor those Merkle roots externally (public blockchain or trusted timestamping) so the full chain segment has a verifiable, time-stamped commitment.
 
+```mermaid
+flowchart LR
+Event1["Event1: event_hash"] --> Event2["Event2: event_hash"]
+Event2 --> Event3["Event3: event_hash"]
+Event3 --> EventN["EventN: event_hash"]
+
+subgraph chainSegment [ChainSegmentWindow]
+Event1
+Event2
+Event3
+EventN
+end
+
+Event1 -.->|"prev_event_hash"| Event2
+Event2 -.->|"prev_event_hash"| Event3
+Event3 -.->|"prev_event_hash"| EventN
+
+ChainRoot["MerkleRoot_of_Segment"] --- Event1
+ChainRoot --- Event2
+ChainRoot --- Event3
+ChainRoot --- EventN
+
+ChainRoot -->|"Anchor_commitment"| ExternalNotary["ExternalNotary"]
+```
+
 ### 8.3 Retrieval Strategy
 Maintain read-optimized indexes:
 - `transaction_id -> [event_ids...]`
